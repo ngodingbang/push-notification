@@ -35,8 +35,18 @@ const initiateElement = () => {
   messageElement.textContent = `Permission is ${Notification.permission}.`;
 };
 
-document.addEventListener("DOMContentLoaded", () => {
+const registerServiceWorker = () => {
+  if (!"serviceWorker" in navigator) {
+    throw new Error("Service worker is not supported.");
+  }
+
+  return navigator.serviceWorker.register("service-worker.js");
+};
+
+document.addEventListener("DOMContentLoaded", async () => {
   initiateElement();
+
+  registerServiceWorker();
 });
 
 subscribeElement.addEventListener("click", async () => {
