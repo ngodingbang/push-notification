@@ -46,7 +46,11 @@ const registerServiceWorker = () => {
 document.addEventListener("DOMContentLoaded", async () => {
   initiateElement();
 
-  registerServiceWorker();
+  const serviceWorker = await registerServiceWorker();
+
+  if ("Notification" in window && Notification.permission === "granted") {
+    serviceWorker.showNotification("Test Service Worker Notification");
+  }
 });
 
 subscribeElement.addEventListener("click", async () => {
