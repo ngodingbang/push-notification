@@ -40,17 +40,11 @@ const registerServiceWorker = () => {
     throw new Error("Service worker is not supported.");
   }
 
-  return navigator.serviceWorker.register("service-worker.js");
+  return navigator.serviceWorker.register("/web/service-worker.js");
 };
 
 document.addEventListener("DOMContentLoaded", async () => {
   initiateElement();
-
-  const serviceWorker = await registerServiceWorker();
-
-  if ("Notification" in window && Notification.permission === "granted") {
-    serviceWorker.showNotification("Test Service Worker Notification");
-  }
 });
 
 subscribeElement.addEventListener("click", async () => {
@@ -71,6 +65,8 @@ subscribeElement.addEventListener("click", async () => {
 
     modifySubscribeElement({ textContent: "Subscribed" });
 
+    await registerServiceWorker();
+
     new Notification("Notification test", {
       tag: "permission-granted",
       body: "Permission is granted.",
@@ -82,26 +78,26 @@ subscribeElement.addEventListener("click", async () => {
   }
 });
 
-document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState !== "hidden") {
-    interval && clearInterval(interval);
-    notification && notification.close();
+// document.addEventListener("visibilitychange", () => {
+//   if (document.visibilityState !== "hidden") {
+//     interval && clearInterval(interval);
+//     notification && notification.close();
 
-    return;
-  }
+//     return;
+//   }
 
-  const now = new Date();
+//   const now = new Date();
 
-  interval = setInterval(() => {
-    notification = new Notification(
-      "Please come back to the page",
-      {
-        tag: "return-to-page",
-        body: `You've been gone for ${Math.round(
-          (new Date() - now) / 1000
-        )} seconds.`,
-      },
-      1000
-    );
-  });
-});
+//   interval = setInterval(() => {
+//     notification = new Notification(
+//       "Please come back to the page",
+//       {
+//         tag: "return-to-page",
+//         body: `You've been gone for ${Math.round(
+//           (new Date() - now) / 1000
+//         )} seconds.`,
+//       },
+//       1000
+//     );
+//   });
+// });
