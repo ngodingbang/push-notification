@@ -1,0 +1,30 @@
+{
+  "name": "@ngodingbang/push-notification",
+  "version": "1.0.0",
+  "module": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate:generate": "bunx drizzle-kit generate",
+    "migrate": "bun run database/migrate.ts",
+    "seed": "bun run database/seed.ts",
+    "start": "bun run src/index.ts",
+    "dev": "bun run --watch src/index.ts"
+  },
+  "dependencies": {
+    "@elysiajs/cors": "^1.0.2",
+    "@elysiajs/swagger": "^1.0.5",
+    "@prisma/client": "^5.16.1",
+    "@types/web-push": "^3.6.3",
+    "chalk": "~4.1.2",
+    "elysia": "latest",
+    "web-push": "^3.6.7"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "prisma": "^5.16.1"
+  },
+  "prisma": {
+    "schema": "database/schema.prisma",
+    "seed": "bun database/seed.ts"
+  }
+}
