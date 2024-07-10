@@ -44,26 +44,33 @@ const generateVapidKeys = async () => {
  * @param {VapidKeysResponse} vapidKeys
  * @param {PushSubscription} pushSubscription
  */
-const sendSubscription = async (vapidKeys, pushSubscription) => {
+const postSubscription = async (vapidKeys, pushSubscription) => {
   const body = JSON.stringify({ vapidKeys, pushSubscription });
-  const response = await fetch("http://localhost:3000/subscriptions", {
+  return fetch("http://localhost:3000/subscriptions", {
     method: "post",
     headers: { "Content-Type": "application/json" },
     body,
   });
-
-  return response.json();
 };
 
 sw.addEventListener("activate", async (event) => {
   const vapidKeys = await generateVapidKeys();
+
+  if (!vapidKeys?.publicKey) {
+    throw new Error("Public key is not available.");
+  }
 
   const subscription = await sw.registration.pushManager.subscribe({
     userVisibleOnly: true,
     applicationServerKey: urlBase64ToUint8Array(vapidKeys?.publicKey),
   });
 
-  await sendSubscription(vapidKeys, subscription);
+  const response = await postSubscription(vapidKeys, subscription);
+  const json = await response.json();
+
+  if (json?.message) {
+    console.info(json.message);
+  }
 });
 
 self.addEventListener("push", (event) => {

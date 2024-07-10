@@ -25,7 +25,62 @@
           </button>
         </div>
 
-        <div id="message" class="col-md-12"></div>
+        <div id="message" class="col-md-12 mt-3"></div>
+
+        <form
+          id="send-notification"
+          class="col-md-12 col-lg-4 offset-lg-4 mt-5"
+        >
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input
+              type="text"
+              class="form-control"
+              id="title"
+              name="title"
+              required="required"
+              aria-describedby="title"
+              placeholder="Enter title"
+            />
+          </div>
+          <div class="form-group">
+            <label for="body">Body</label>
+            <textarea
+              class="form-control"
+              id="body"
+              name="body"
+              cols="20"
+              required="required"
+              aria-describedby="body"
+              placeholder="Enter body"
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label for="body">Subscription ID</label>
+            <input
+              type="text"
+              class="form-control"
+              id="subscription-id"
+              name="subscription-id"
+              aria-describedby="subscription id"
+              placeholder="(optional)"
+            />
+          </div>
+          <div class="form-group">
+            <label for="body">Tag</label>
+            <input
+              type="text"
+              class="form-control"
+              id="tag"
+              name="tag"
+              aria-describedby="tag"
+              placeholder="(optional)"
+            />
+          </div>
+          <button type="submit" class="btn btn-primary">
+            Send Notification
+          </button>
+        </form>
       </div>
     </div>
     <script src="/web/app.js"></script>

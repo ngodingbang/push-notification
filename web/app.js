@@ -1,5 +1,6 @@
 const subscribeElement = document.getElementById("subscribe");
 const messageElement = document.getElementById("message");
+const sendNotificationElement = document.getElementById("send-notification");
 
 /** @type {Notification} */
 let notification;
@@ -73,6 +74,39 @@ subscribeElement.addEventListener("click", async () => {
     });
   } catch (error) {
     messageElement.textContent = error.message;
+
+    throw error;
+  }
+});
+
+sendNotificationElement.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const formData = new FormData(event.target);
+  const url = formData.get("subscription-id")
+    ? `http://localhost:3000/subscriptions/${formData.get(
+        "subscription-id"
+      )}/send-notification`
+    : "http://localhost:3000/subscriptions/send-notifications";
+
+  try {
+    const response = await fetch(url, {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: formData.get("title"),
+        options: {
+          body: formData.get("body"),
+          tag: formData.get("tag"),
+        },
+      }),
+    });
+
+    if (response.status !== 200) {
+      messageElement.textContent = "Notification sent succesfully.";
+    }
+  } catch (error) {
+    messageElement.textContent = "Notification failed to sent.";
 
     throw error;
   }
