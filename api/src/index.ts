@@ -308,10 +308,10 @@ const app = new Elysia()
       .post(
         "/send-notifications",
         async ({ body: { title, options }, set }) => {
-          const subcriptions = await model.subscription.findMany();
+          const subscriptions = await model.subscription.findMany();
 
           const responses = await Promise.allSettled(
-            subcriptions.map((subscription) => {
+            subscriptions.map((subscription) => {
               const data: SubscriptionData = JSON.parse(subscription.data);
 
               return webpush.sendNotification(
@@ -329,8 +329,8 @@ const app = new Elysia()
           );
 
           return {
-            data: subcriptions.map((subcription, index) => ({
-              subcription,
+            data: subscriptions.map((subscription, index) => ({
+              subscription,
               response: responses[index],
             })),
           };
@@ -447,7 +447,7 @@ const app = new Elysia()
                       example: {
                         data: [
                           {
-                            subcription: {
+                            subscription: {
                               id: "1eab7dd3-c218-4ef9-8c7f-0ba9bab71d2b",
                               data: '{"vapidKeys":{"publicKey":"BEayAvCfBy37jwgu5xdn9YaNLwWp5WfuUVoGUiJ0gizdXL6aheLmySROkHEZnjWSdO1xM5LDgK-JNJpOxuBU1Jg","privateKey":"aFmawZJSmJS8EsurA_dIVTWhYVnPI8s7aCmE9IWWZcc"},"pushSubscription":{"endpoint":"https://fcm.googleapis.com/fcm/send/fdlf94b-XJg:APA91bGGhfI4jMVLqPcyhhPYhSbWJr4faPbUqquwNWitGgib5IHqXuwro_2-8EQE5eF6NOgatF4Bd9nvQ_yP6o0BpGJ-Q6LEFnoBZg0Rn41WYc7F7eLRWi6iS5ShJcN0tOmmGQzxmcIx","expirationTime":null,"keys":{"p256dh":"BH8y0sM5bb1awgkIXQ7KQDnZd3vf-J_fvZbUuIxDGbsXlSZA1jxixgxSMl6PUxe8EdDvtweeXBWSILs6G_3gmsM","auth":"QOHNbqdWEqgH0SJ4hxJsrQ"}}}',
                               created_at: "2024-07-08T07:53:50.555Z",
