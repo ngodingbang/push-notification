@@ -1,3 +1,20 @@
-# NgodingBang Push Notification
+# NgodingBang Push Notification Web with Bun runtime
 
-Create a simple push notification on a web based on this tutorial: https://www.youtube.com/playlist?list=PL62km_yqC3ZF5Dh9vFdjjRxvn1xQKqj4B
+## Installation
+
+To get started using this app, simply paste this command into your terminal:
+
+```bash
+bun install
+```
+
+## Development
+
+To start the development server run:
+
+```bash
+bun run dev
+bun run dev:secure # run server using https
+```
+
+Open http://localhost:3001/ with your browser to see the result.
