@@ -1,9 +1,25 @@
 import { cors } from "@elysiajs/cors";
 import { swagger } from "@elysiajs/swagger";
 import { Elysia, t } from "elysia";
+import { parseArgs } from "util";
 import webpush from "web-push";
+import { generateTls } from "./experimental-https";
 import { model } from "./models";
 import { SubscriptionData } from "./types";
+
+const {
+  values: { "experimental-https": experimentalHttps },
+} = parseArgs({
+  args: Bun.argv,
+  options: {
+    "experimental-https": {
+      type: "boolean",
+      default: false,
+    },
+  },
+  strict: true,
+  allowPositionals: true,
+});
 
 const app = new Elysia()
   .use(cors())
@@ -1209,9 +1225,16 @@ const app = new Elysia()
           },
         }
       )
-  )
-  .listen(3000);
+  );
 
-console.info(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
+const server = Bun.serve({
+  port: process.env.PORT || 3000,
+  fetch: (request) => app.handle(request),
+  tls: experimentalHttps ? await generateTls() : undefined,
+});
+
+console.log(
+  `🦊 Elysia is running at http${experimentalHttps ? "s" : ""}://${
+    server?.hostname
+  }:${server?.port}`
 );

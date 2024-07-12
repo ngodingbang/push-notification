@@ -2,10 +2,19 @@ const subscribeElement = document.getElementById("subscribe");
 const messageElement = document.getElementById("message");
 const sendNotificationElement = document.getElementById("send-notification");
 
+/** @typedef {{
+  data: {
+    publicKey: string;
+    privateKey: string;
+  }
+}} VapidKeysResponse */
+
 /** @type {Notification} */
 let notification;
 /** @type {number} */
 let interval;
+
+const apiBaseUrl = "https://localhost:3000";
 
 const modifySubscribeElement =
   /**
@@ -36,17 +45,75 @@ const initiateElement = () => {
   messageElement.textContent = `Permission is ${Notification.permission}.`;
 };
 
-const registerServiceWorker = () => {
+/**
+ * @returns {Promise<ServiceWorkerRegistration>}
+ */
+const registerServiceWorker = async () => {
   if (!"serviceWorker" in navigator) {
     throw new Error("Service worker is not supported.");
   }
 
-  return navigator.serviceWorker.register("/web/service-worker.js");
+  await navigator.serviceWorker.register("/service-worker.js");
+
+  return navigator.serviceWorker.ready;
 };
 
 document.addEventListener("DOMContentLoaded", async () => {
   initiateElement();
 });
+
+const getToken = async () => {
+  const vapidKeys = await generateVapidKeys();
+
+  if (!vapidKeys?.publicKey) {
+    throw new Error("Public key is not available.");
+  }
+
+  return vapidKeys;
+};
+
+/**
+ * @param {string} base64String
+ */
+const urlBase64ToUint8Array = (base64String) => {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding)
+    .replace(/\-/g, "+")
+    .replace(/_/g, "/");
+  const rawData = atob(base64);
+
+  const result = new Uint8Array(rawData.length);
+
+  for (let index = 0; index < rawData.length; ++index) {
+    result[index] = rawData.charCodeAt(index);
+  }
+
+  return result;
+};
+
+/**
+ * @param {string} url
+ */
+const generateVapidKeys = async (url) => {
+  const response = await fetch(url || `${apiBaseUrl}/generate-vapid-keys`);
+  /** @type {VapidKeysResponse} */
+  const json = await response.json();
+
+  return json?.data;
+};
+
+/**
+ * @param {VapidKeysResponse} vapidKeys
+ * @param {PushSubscription} pushSubscription
+ */
+const postSubscription = async (vapidKeys, pushSubscription) => {
+  const body = JSON.stringify({ vapidKeys, pushSubscription });
+  return fetch(`${apiBaseUrl}/subscriptions`, {
+    method: "post",
+    headers: { "Content-Type": "application/json" },
+    body,
+  });
+};
 
 subscribeElement.addEventListener("click", async () => {
   try {
@@ -66,7 +133,20 @@ subscribeElement.addEventListener("click", async () => {
 
     modifySubscribeElement({ textContent: "Subscribed" });
 
-    await registerServiceWorker();
+    const serviceWorkerRegistration = await registerServiceWorker();
+
+    const vapidKeys = await getToken();
+    const subscription = await serviceWorkerRegistration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(vapidKeys?.publicKey),
+    });
+
+    const response = await postSubscription(vapidKeys, subscription);
+    const json = await response.json();
+
+    if (json?.message) {
+      console.info(json.message);
+    }
 
     new Notification("Notification test", {
       tag: "permission-granted",
@@ -84,10 +164,10 @@ sendNotificationElement.addEventListener("submit", async (event) => {
 
   const formData = new FormData(event.target);
   const url = formData.get("subscription-id")
-    ? `http://localhost:3000/subscriptions/${formData.get(
+    ? `${apiBaseUrl}/subscriptions/${formData.get(
         "subscription-id"
       )}/send-notification`
-    : "http://localhost:3000/subscriptions/send-notifications";
+    : `${apiBaseUrl}/subscriptions/send-notifications`;
 
   try {
     const response = await fetch(url, {

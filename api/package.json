@@ -1,5 +1,5 @@
 {
-  "name": "@ngodingbang/push-notification",
+  "name": "@ngodingbang/push-notification-api",
   "version": "1.0.0",
   "module": "src/index.js",
   "scripts": {
@@ -8,7 +8,8 @@
     "migrate": "bun run database/migrate.ts",
     "seed": "bun run database/seed.ts",
     "start": "bun run src/index.ts",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/index.ts",
+    "dev:secure": "bun run --watch src/index.ts --experimental-https"
   },
   "dependencies": {
     "@elysiajs/cors": "^1.0.2",
