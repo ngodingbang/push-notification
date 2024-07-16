@@ -901,6 +901,17 @@ const app = new Elysia()
             summary: "send notification",
             description:
               "Sending notifications to specified subscription list.",
+            parameters: [
+              {
+                name: "id",
+                in: "path",
+                schema: {
+                  type: "string",
+                },
+                required: true,
+                example: "095188ee-a766-49d1-9532-c4c75dfe0efc",
+              },
+            ],
             requestBody: {
               content: {
                 "application/json": {
