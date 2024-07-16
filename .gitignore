@@ -25,6 +25,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
+.env
 .env.local
 .env.development.local
 .env.test.local
@@ -42,4 +43,8 @@ package-lock.json
 **/*.bun
 
 # ssl certificate
-certificates
+/certificates
+
+# database
+/api/database/database.db
+/api/database/database.db-journal

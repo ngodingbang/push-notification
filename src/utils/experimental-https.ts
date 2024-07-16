@@ -6,11 +6,11 @@ export const generateTls = async (): Promise<TLSOptions | undefined> => {
     await $`mkcert -install`.quiet().nothrow();
 
     await mkdir("./certificates", { recursive: true });
-    await $`mkcert -key-file ./certificates/localhost-key.perm -cert-file ./certificates/localhost.perm localhost 127.0.0.1 ::1`.quiet();
+    await $`mkcert -key-file ./certificates/localhost-key.pem -cert-file ./certificates/localhost.pem localhost 127.0.0.1 ::1`.quiet();
 
     return {
-      key: Bun.file("./certificates/localhost-key.perm"),
-      cert: Bun.file("./certificates/localhost.perm"),
+      key: await Bun.file("./certificates/localhost-key.pem").text(),
+      cert: await Bun.file("./certificates/localhost.pem").text(),
     };
   } catch (error) {
     if (error?.name === "ShellError") {

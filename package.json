@@ -1,0 +1,40 @@
+{
+  "name": "@ngodingbang/push-notification",
+  "version": "1.0.0",
+  "scripts": {
+    "api:start": "bun run api/src/index.ts",
+    "api:dev": "bun run --watch api/src/index.ts",
+    "api:dev:secure": "bun run --watch api/src/index.ts --experimental-https",
+    "web:start": "bun run web/src/index.ts",
+    "web:dev": "bun run --watch web/src/index.ts",
+    "web:dev:secure": "bun run --watch web/src/index.ts --experimental-https"
+  },
+  "author": {
+    "name": "Septianata Rizky Pratama",
+    "email": "ngodingbang@gmail.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ngodingbang/push-notification/issues"
+  },
+  "homepage": "https://github.com/ngodingbang/push-notification#readme",
+  "dependencies": {
+    "@elysiajs/static": "^1.0.3",
+    "@elysiajs/cors": "^1.0.2",
+    "@elysiajs/swagger": "^1.0.5",
+    "@prisma/client": "^5.16.1",
+    "@types/web-push": "^3.6.3",
+    "chalk": "~4.1.2",
+    "elysia": "latest",
+    "prisma": "^5.16.1",
+    "web-push": "^3.6.7",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "prisma": {
+    "schema": "api/database/schema.prisma",
+    "seed": "bun api/database/seed.ts"
+  }
+}

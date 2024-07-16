@@ -1,11 +1,12 @@
 import prisma from "@prisma/client";
 import chalk from "chalk";
+import env from "../../../src/utils/env";
 
 const model = new prisma.PrismaClient({
   log: [{ emit: "event", level: "query" }],
 });
 
-if (process.env.NODE_ENV === "development") {
+if (env.NODE_ENV === "development") {
   model.$on("query", (event) => {
     console.info(`${chalk.blue("prisma:query")} ${event.query}`);
     console.info(`${chalk.blue("prisma:params")}: ${event.params}`);
