@@ -8,6 +8,15 @@
     "dev": "bun run --watch src/index.ts",
     "dev:secure": "bun run --watch src/index.ts --experimental-https"
   },
+  "author": {
+    "name": "Septianata Rizky Pratama",
+    "email": "ngodingbang@gmail.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ngodingbang/push-notification/issues"
+  },
+  "homepage": "https://github.com/ngodingbang/push-notification#readme",
   "dependencies": {
     "@elysiajs/static": "^1.0.3",
     "elysia": "latest"
