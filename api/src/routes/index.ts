@@ -1,4 +1,4 @@
-import Elysia from "elysia";
+import { Elysia } from "elysia";
 import generateVapidKeys from "./homepage/generate-vapid-keys";
 import helloWorld from "./homepage/hello-world";
 import destroy from "./subscriptions/destroy";
